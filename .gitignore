@@ -1,0 +1,11 @@
+DogFit_debug/*
+datasets/*
+datasets/*
+datasets/*
+results/*
+logs/*
+pretrained_models/*
+tmp/*
+*.png
+*.jpg
+*.jpeg
