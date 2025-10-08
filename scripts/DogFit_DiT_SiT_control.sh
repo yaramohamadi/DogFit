@@ -5,7 +5,7 @@ SERVER="bool"
 CUDA_DEVICES="0,1"
 SCRIPT="run_DogFit.sh"
 MODEL_NAME="DiT-XL/2"     # Options: "DiT-XL/2", "SiT-XL/2"
-FOCUS="FD_DINOV2"         # Options: "FID", "FD_DINOV2"
+FOCUS="FID"         # Options: "FID", "FD_DINOV2"
 
 declare -a TASKS=(
   "food-101_processed"
@@ -26,7 +26,7 @@ fi
 # ========== Per-task configuration: w_min, w_max, sample_guidance, control_dist ==========
 declare -A PARAMS_MAP
 # Format: "w_min,w_max,sample_guidance,control_distribution" (w_min and w_max are only used when control_distribution is 'uniform')
-PARAMS_MAP["food-101_processed"]="1,3,0,50in1to1.25"
+PARAMS_MAP["food-101_processed"]="1,3,0,uniform 1,5,0,uniform 1,7,0,uniform"
 
 # ========== EXECUTION LOOP ==========
 for DATASET in "${TASKS[@]}"; do
@@ -42,7 +42,7 @@ for DATASET in "${TASKS[@]}"; do
     echo "Server: $SERVER | CUDA Devices: $CUDA_DEVICES"
     echo "----------------------------------------------"
 
-    EXPERIMENT_PRENAME="publish_control/${MODEL_NAME%%/*}_${FOCUS}_ours/control_normalizing_exponential_cutofflatestart/${CONTROL_DISTRIBUTION}"
+    EXPERIMENT_PRENAME="publish_control/${MODEL_NAME%%/*}_${FOCUS}_ours/control_normalizing_exponential_cutofflatestart/${CONTROL_DISTRIBUTION}_${W_MIN}_${W_MAX}_sg${SAMPLE_GUIDANCE}"
 
     CMD="scripts/$SCRIPT \
       --dataset \"$DATASET\" \

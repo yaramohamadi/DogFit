@@ -38,6 +38,7 @@ resolve_dataset_config() {
     *) echo "Unknown dataset: $DATASET"; exit 1 ;;
   esac
   DATA_DIR_ZIP="$DATASETS_DIR/eurosat-dataset.zip"
+  DATA_DIR_ZIP="$DATASETS_DIR/food-101.zip"
   REAL_DATA_DIR="$DATASETS_DIR/$DATASET"
   # Normal Generated Directory for Ours and MG
   RESULTS_DIR="$RESULTS_PRE_DIR/$DATASET/$EXPERIMENT_NAME/"
@@ -61,9 +62,9 @@ resolve_server_paths() {
         bool)
             conda init
             source ~/.bashrc
-            CODE_PRE_DIR="/projets/Ymohammadi/DomainGuidance"
-            DATASETS_DIR="/projets/Ymohammadi/DomainGuidance/datasets"
-            RESULTS_PRE_DIR="/export/datasets/public/diffusion_datasets/tmp_weights"
+            CODE_PRE_DIR="/projets/Ymohammadi/DogFit_rebuttal"
+            DATASETS_DIR="/projets/Ymohammadi/DogFit_rebuttal/datasets"
+            RESULTS_PRE_DIR="/projets/Ymohammadi/DogFit_rebuttal/results"
             ENV_PATH="/projets/Ymohammadi/envs/DiT"
             ;;
         taylor)
@@ -72,7 +73,7 @@ resolve_server_paths() {
             CODE_PRE_DIR="/home/ens/AT74470/DogFit"
             DATASETS_DIR="//home/ens/AT74470/DogFit/datasets"
             RESULTS_PRE_DIR="/home/ens/AT74470/DogFit/results"
-            ENV_PATH="/home/ens/AT74470/envs/DiT"
+            ENV_PATH="/home/ens/AT74470/envs/DiT/"
             ;;
         *)
             echo "Unknown server: $SERVER" >&2
@@ -91,6 +92,7 @@ create_environment() {
     echo "Using existing conda env at $ENV_PATH"
     conda activate "$ENV_PATH"
   else
+    echo "Creating new conda env at $ENV_PATH"
     conda create --prefix "$ENV_PATH" python=3.11 -y
     source "$(conda info --base)/etc/profile.d/conda.sh"
     conda activate "$ENV_PATH"

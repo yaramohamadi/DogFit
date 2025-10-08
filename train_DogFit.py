@@ -44,6 +44,27 @@ import os
 ############################## Setup logging ######################################
 
 
+def build_ema_from(model):
+    # create the same structure without weights tied to the original
+    if isinstance(model, GuidedWrapper):
+        # reconstruct wrapper around a deepcopy of the base model
+        base_copy = deepcopy(model.base_model)
+        ema_wrapped = GuidedWrapper(
+            base_copy,
+            zero_norm_variance=("1" if model.zero_init else "0")
+                              + ("1" if model.use_layer_norm else "0")
+                              + ("1" if model.variance_match else "0"),
+            w_dim=1, embed_dim=model.embed_dim
+        )
+        # copy the w_embed weights as well
+        ema_wrapped.w_embed.load_state_dict(model.w_embed.state_dict())
+        return ema_wrapped
+    else:
+        return deepcopy(model)
+
+
+
+
 def _unique_step_path(out_dir: str, step: int, prefix: str = "x0_step_", ext: str = ".png") -> str:
     """
     Returns a unique filepath like:
@@ -501,27 +522,22 @@ import math
 import re
 import torch
 import torch.nn as nn
-
-
 class GuidedWrapper(nn.Module):
     """
-    Wrapper for DiT or SiT that uses additive embedding guidance,
-    configurable via a 3-bit string: zero_init, layer_norm, variance_match.
+    Wrapper for DiT or SiT that adds a learnable guidance embedding 'w'.
+    Robust against deepcopy / DDP / attribute probing.
     """
-
     def __init__(self, base_model, zero_norm_variance="111", w_dim=1, embed_dim=1152, hidden_dim=128):
         super().__init__()
+        # register the wrapped model as a real submodule (goes into self._modules)
         self.base_model = base_model
         self.embed_dim = embed_dim
 
-        # Parse boolean flags from zero_norm_variance string
-        assert len(zero_norm_variance) == 3, \
-            "zero_norm_variance must be a 3-bit string like '101'"
-        self.zero_init = zero_norm_variance[0] == "1"
-        self.use_layer_norm = zero_norm_variance[1] == "1"
-        self.variance_match = zero_norm_variance[2] == "1"
+        assert len(zero_norm_variance) == 3, "zero_norm_variance must be 'abc' bits"
+        self.zero_init = (zero_norm_variance[0] == "1")
+        self.use_layer_norm = (zero_norm_variance[1] == "1")
+        self.variance_match = (zero_norm_variance[2] == "1")
 
-        # Create embedding MLP for guidance scalar
         layers = [
             nn.Linear(w_dim, embed_dim),
             nn.SiLU(),
@@ -531,46 +547,94 @@ class GuidedWrapper(nn.Module):
             layers.append(nn.LayerNorm(embed_dim))
         self.w_embed = nn.Sequential(*layers)
 
-        # Optional zero init
         if self.zero_init:
             for m in self.w_embed.modules():
                 if isinstance(m, nn.Linear):
                     nn.init.zeros_(m.weight)
-                    nn.init.zeros_(m.bias)
+                    if m.bias is not None:
+                        nn.init.zeros_(m.bias)
+
+    # ----- helpers to access the wrapped base safely -----
+    def _base(self):
+        b = self._modules.get("base_model", None)  # nn.Module stores submodules here
+        if b is None:
+            raise AttributeError("base_model")
+        return b
 
     def forward(self, x, t, y, w=None):
-        t_emb = self.base_model.t_embedder(t)                # (B, D)
-        y_emb = self.base_model.y_embedder(y, self.training) # (B, D)
+        base = self._base()
+        t_emb = base.t_embedder(t)                 # (B, D)
+        y_emb = base.y_embedder(y, self.training)  # (B, D)
 
         if w is not None:
-            w = w.view(-1, 1)  # (B, 1)
-            w_emb = self.w_embed(w - 1)  # (B, D)
-
+            w = w.view(-1, 1)
+            w_emb = self.w_embed(w - 1)            # (B, D)
             if self.variance_match:
                 cond_std = (t_emb + y_emb).std(dim=-1, keepdim=True).detach()
-                w_emb = w_emb * cond_std * 0.5  # Optional scale
-
+                w_emb = w_emb * cond_std * 0.5
             c = t_emb + y_emb + w_emb
         else:
             c = t_emb + y_emb
 
-        x = self.base_model.x_embedder(x) + self.base_model.pos_embed
-        for block in self.base_model.blocks:
+        x = base.x_embedder(x) + base.pos_embed
+        for block in base.blocks:
             x = block(x, c)
-        x = self.base_model.final_layer(x, c)
-        x = self.base_model.unpatchify(x)
+        x = base.final_layer(x, c)
+        x = base.unpatchify(x)
 
-        if self.base_model.__class__.__name__ == "SiT" and self.base_model.learn_sigma:
+        if base.__class__.__name__ == "SiT" and getattr(base, "learn_sigma", False):
             x, _ = x.chunk(2, dim=1)
         return x
 
     def __getattr__(self, name):
-        # Delegate unknown attributes to base model
-        try:
-            return getattr(self.base_model, name)
-        except AttributeError:
-            raise AttributeError(f"{self.__class__.__name__} has no attribute '{name}'")
 
+        # 0) If PyTorch fell through here, first rescue real submodules from _modules.
+        if name in ("w_embed", "base_model"):
+            m = self._modules.get(name, None)
+            if m is not None:
+                return m
+
+        # never delegate dunders or core nn.Module plumbing
+        if (name.startswith("__") and name.endswith("__")) or name in {
+            "training", "_parameters", "_buffers", "_modules",
+            "state_dict", "load_state_dict", "named_parameters",
+            "named_children", "parameters", "children", "modules",
+            "register_buffer", "register_parameter", "to",
+            "cpu", "cuda", "eval", "train",
+            # block direct access to our own attrs (we’ll get them via _modules when needed)
+            "base_model", "w_embed", "embed_dim", "zero_init",
+            "use_layer_norm", "variance_match",
+        }:
+            raise AttributeError(name)
+        base = self._modules.get("base_model", None)
+        if base is None:
+            raise AttributeError(name)
+        try:
+            return getattr(base, name)
+        except AttributeError:
+            raise AttributeError(f"{type(self).__name__} has no attribute '{name}'")
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        new = cls.__new__(cls)
+        memo[id(self)] = new
+
+        # IMPORTANT: initialize Module internals before attaching submodules
+        nn.Module.__init__(new)
+
+        # copy simple flags
+        for k in ("embed_dim", "zero_init", "use_layer_norm", "variance_match"):
+            setattr(new, k, getattr(self, k))
+
+        # Fetch submodules directly from _modules to avoid our __getattr__
+        base = self._modules.get("base_model")
+        wemb = self._modules.get("w_embed")
+
+        # Deepcopy the submodules; assigning to attributes registers them in new._modules
+        new.base_model = deepcopy(base, memo)
+        new.w_embed    = deepcopy(wemb, memo)
+
+        return new
 
 
 def sample_shifted_exp_custom(size, device, mode="95in1to3"):
@@ -848,7 +912,8 @@ def main(args):
         logger.info("[DogFit] Using standard model without guidance control.")
 
     # Note that parameter initialization is done within the DiT constructor
-    ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
+
+    ema = deepcopy(model).to(device)
     requires_grad(ema, False)
 
     model = DDP(model.to(device), device_ids=[rank])
@@ -907,7 +972,7 @@ def main(args):
     logger.info(f"Dataset contains {len(dataset):,} images ({args.data_path})")
 
     # Prepare models for training:
-    update_ema(ema, model.module, decay=0)  # Ensure EMA is initialized with synced weights
+    # update_ema(ema, model.module, decay=0)  # Ensure EMA is initialized with synced weights
     model.train()  # important! This enables embedding dropout for classifier-free guidance
     ema.eval()  # EMA model should always be in eval mode
 
@@ -924,8 +989,6 @@ def main(args):
         sampler.set_epoch(epoch)
         logger.info(f"Beginning epoch {epoch}...")
         for x, y in loader:
-
-            print(x.shape, y.shape  )
             x = x.to(device)
             y = y.to(device)
 
@@ -995,7 +1058,7 @@ def main(args):
             opt.zero_grad()
             loss.backward()
             opt.step()
-            update_ema(ema, model.module)
+            # update_ema(ema, model.module)
 
             # Log loss values:
             running_loss += loss.item()

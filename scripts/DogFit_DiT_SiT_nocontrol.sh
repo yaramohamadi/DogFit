@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # ========== GLOBAL CONFIGURATION ==========
-SERVER="taylor"
-CUDA_DEVICES="2,3"
+SERVER="bool"
+CUDA_DEVICES="0,1"
 SCRIPT="run_DogFit.sh"
 EXPERIMENT_PRENAME="publish_DiT_nocontrol"
 MODEL_NAME="DiT-XL/2"  # or "DiT-XL/2"
@@ -10,17 +10,17 @@ FOCUS_METRIC="FD_DINOV2"  # or "FID"
 
 # "food-101_processed"
 declare -a TASKS=(
-  "EuroSAT"
+  "food-101_processed"
 )
 
 # ========== Define (latestart, mghigh) for each focus ==========
 declare -A PARAMS_FD_DINOV2
 # PARAMS_FD_DINOV2["food-101_processed"]="6000,1"
-PARAMS_FD_DINOV2["EuroSAT"]="6000,1"
+PARAMS_FD_DINOV2["food-101_processed"]="6000,1"
 
 declare -A PARAMS_FID
 # PARAMS_FID["food-101_processed"]="12000,0.5"  # late-start
-PARAMS_FID["EuroSAT"]="12000,0.5" 
+PARAMS_FID["101_processed"]="12000,0.5" 
 # cutoff example: 6000,1 (not used here, but you can modify as needed)
 
 # ========== EXECUTION LOOP ==========
