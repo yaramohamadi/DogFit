@@ -1,4 +1,7 @@
-# DogFit: Domain-Guided Fine-Tuning for Diffusion Models
+# DogFit: Domain-Guided Fine-Tuning for Diffusion Models (AAAI 2026)
+```
+Bahram, Yara, Mohammadhadi Shateri, and Eric Granger. "DogFit: Domain-guided Fine-tuning for Efficient Transfer Learning of Diffusion Models." arXiv preprint arXiv:2508.05685 (2025).
+```
 
 This repository contains the official implementation of **DogFit**, an efficient domain-guided fine-tuning method for transfer learning of diffusion models.
 
@@ -106,4 +109,14 @@ We further provide a code for running the baselines, normal fine-tuning, CFG, Do
 ├── train_DogFit.py                # Training for DogFit 
 ├── sample.py                      # Sampling for fine-tune, CFG, DoG, DogFit
 └── sample_DoG.py                  # Sampling for DoG
+```
+
+### Cite
+```
+@article{bahram2025dogfit,
+  title={DogFit: Domain-guided Fine-tuning for Efficient Transfer Learning of Diffusion Models},
+  author={Bahram, Yara and Shateri, Mohammadhadi and Granger, Eric},
+  journal={arXiv preprint arXiv:2508.05685},
+  year={2025}
+}
 ```
