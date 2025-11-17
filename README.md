@@ -124,6 +124,8 @@ We further provide a code for running the baselines, normal fine-tuning, CFG, Do
 Yara Bahram [yara.mohammadi-bahram@livia.etsmtl.ca](mailto:yara.mohammadi-bahram@livia.etsmtl.ca)
 
 ### Cite
+
+If you find DogFit useful or relevant to your research, please kindly cite:
 ```
 @article{bahram2026dogfit,
   title={DogFit: Domain-guided Fine-tuning for Efficient Transfer Learning of Diffusion Models},
@@ -132,3 +134,9 @@ Yara Bahram [yara.mohammadi-bahram@livia.etsmtl.ca](mailto:yara.mohammadi-bahram
   year={2026}
 }
 ```
+
+## Acknowledgments 
+
+This work was done while Yara Bahram was a full-time student at LIVIA - ILLS - ETS. This research was supported by the Natural Sciences and Engineering Research Council of Canada, and the Digital Research Alliance of Canada.
+
+The implementation is partially based on [github.com/thuml/DomainGuidance](https://github.com/thuml/DomainGuidance). We thank them for their great code. 
