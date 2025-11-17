@@ -34,10 +34,8 @@ echo "Using MASTER_PORT=$PORT"
 resolve_dataset_config() {
   case "$DATASET" in
     food-101_processed) NUM_CLASSES=101 ;;
-    EuroSAT) NUM_CLASSES=10 ;;
     *) echo "Unknown dataset: $DATASET"; exit 1 ;;
   esac
-  DATA_DIR_ZIP="$DATASETS_DIR/eurosat-dataset.zip"
   DATA_DIR_ZIP="$DATASETS_DIR/food-101.zip"
   REAL_DATA_DIR="$DATASETS_DIR/$DATASET"
   # Normal Generated Directory for Ours and MG
@@ -56,24 +54,16 @@ resolve_dataset_config() {
   RESULTS_FILE="$RESULTS_DIR/results"
 }
 
-# ==== PATHS ====
+# ==== PATHS ==== (These paths need to be changed)
 resolve_server_paths() {
     case "$SERVER" in
         bool)
             conda init
             source ~/.bashrc
-            CODE_PRE_DIR="/projets/Ymohammadi/DogFit_rebuttal"
-            DATASETS_DIR="/projets/Ymohammadi/DogFit_rebuttal/datasets"
-            RESULTS_PRE_DIR="/projets/Ymohammadi/DogFit_rebuttal/results"
-            ENV_PATH="/projets/Ymohammadi/envs/DiT"
-            ;;
-        taylor)
-            conda init
-            source ~/.bashrc
-            CODE_PRE_DIR="/home/ens/AT74470/DogFit"
-            DATASETS_DIR="//home/ens/AT74470/DogFit/datasets"
-            RESULTS_PRE_DIR="/home/ens/AT74470/DogFit/results"
-            ENV_PATH="/home/ens/AT74470/envs/DiT/"
+            CODE_PRE_DIR="/PATH_TO_PROJECT/"
+            DATASETS_DIR="/PATH_TO_PROJECT/datasets"
+            RESULTS_PRE_DIR="/PATH_TO_PROJECT/results"
+            ENV_PATH="PATH_TO_ENV/"
             ;;
         *)
             echo "Unknown server: $SERVER" >&2
@@ -150,9 +140,6 @@ prepare_dataset() {
 
     find "$REAL_DATA_DIR" -name '._*' -delete
     echo ">>> Dataset prepared at: $REAL_DATA_DIR"
-
-  elif [ "$DATASET" == 'EuroSAT' ]; then
-    echo ">>> Preparing EuroSAT dataset..."
   else
     echo "Unsupported dataset: $DATASET"
     exit 1
