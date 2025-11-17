@@ -1,11 +1,17 @@
 # DogFit: Domain-Guided Fine-Tuning for Diffusion Models (AAAI 2026)
-```
-Bahram, Y., Shateri, M., & Granger, E. (2025).
-DogFit: Domain-guided Fine-tuning for Efficient Transfer Learning of Diffusion Models.
-arXiv preprint arXiv:2508.05685.
-```
+
+
+> **DogFit: Domain-Guided Fine-Tuning for Diffusion Models (AAAI 2026)**,            
+> Yara Bahram, Mohammadhadi Shateri, Eric Granger   
+> *AAAI 2026 ([arXiv 2508.05685](https://arxiv.org/abs/2508.05685))*  
+
+<img width="1496" height="768" alt="photo" src="https://github.com/user-attachments/assets/7aa36b7e-5c17-45b5-9083-36e71b1f44eb" />
 
 This repository contains the official implementation of **DogFit**, an efficient domain-guided fine-tuning method for transfer learning of diffusion models.
+
+## Abstract
+
+Transfer learning of diffusion models to new domains with limited data is challenging, as naively fine-tuning the model often results in poor generalization. Test-time guidance methods help mitigate this by offering controllable improvements in image fidelity through a trade-off with sample diversity. However, this benefit comes at a high computational cost, typically requiring dual forward passes during sampling.  We propose the \underline{Do}main-\underline{g}uided \underline{Fi}ne-\underline{t}uning (\texttt{DogFit}) method, an effective guidance mechanism for diffusion transfer learning that maintains controllability without incurring additional computational overhead. \texttt{DogFit} injects a domain-aware guidance offset into the training loss, effectively internalizing the guided behavior during the fine-tuning process. The domain-aware design is motivated by our observation that during fine-tuning, the unconditional source model offers a stronger marginal estimate than the target model. To support efficient controllable fidelity–diversity trade-offs at inference, we encode the guidance strength value as an additional model input through a lightweight conditioning mechanism. We further investigate the optimal placement and timing of the guidance offset during training and propose two simple scheduling strategies, i.e., \textit{late-start} and \textit{cut-off}, which improve generation quality and training stability. Experiments on DiT and SiT backbones across six diverse target domains show that \texttt{DogFit} can outperform state-of-the-art guidance methods in transfer learning in terms of FID and $\text{FD}_{\text{DINOV2}}$ while requiring up to $\sim\times2$ fewer sampling TFLOPS. 
 
 We demonstrate our method using **SiT-XL/2** and **DiT-XL/2** on the **Food-101** dataset and provide support for evaluating key metrics such as **FID**, **FD_DINOV2**, **Precision**, and **Recall**.
 
@@ -113,12 +119,16 @@ We further provide a code for running the baselines, normal fine-tuning, CFG, Do
 └── sample_DoG.py                  # Sampling for DoG
 ```
 
+## Contact 
+
+Yara Bahram [yara.mohammadi-bahram@livia.etsmtl.ca](mailto:yara.mohammadi-bahram@livia.etsmtl.ca)
+
 ### Cite
 ```
-@article{bahram2025dogfit,
+@article{bahram2026dogfit,
   title={DogFit: Domain-guided Fine-tuning for Efficient Transfer Learning of Diffusion Models},
   author={Bahram, Yara and Shateri, Mohammadhadi and Granger, Eric},
-  journal={arXiv preprint arXiv:2508.05685},
-  year={2025}
+  booktitle={AAAI 2026},
+  year={2026}
 }
 ```
