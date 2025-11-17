@@ -121,7 +121,7 @@ We further provide a code for running the baselines, normal fine-tuning, CFG, Do
 
 ## Contact 
 
-Yara Bahram [yara.mohammadi-bahram@livia.etsmtl.ca](mailto:yara.mohammadi-bahram@livia.etsmtl.ca)
+If you have any questions, please contact Yara Bahram at [yara.mohammadi-bahram@livia.etsmtl.ca](mailto:yara.mohammadi-bahram@livia.etsmtl.ca).
 
 ### Cite
 
