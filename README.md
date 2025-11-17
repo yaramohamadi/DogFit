@@ -88,7 +88,7 @@ Choices for model: DiT-XL/2  SiT-XL/2
 
 ## Baselines
 
-> To run the baselines, refer to the example scripts provided in: `scripts/Baselines_DiT_SiT_noControl.sh`
+To run the baselines, refer to the example scripts provided in: `scripts/Baselines_DiT_SiT_noControl.sh`
 
 
 ## Repository Structure
