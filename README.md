@@ -1,7 +1,7 @@
 # DogFit: Domain-Guided Fine-Tuning for Diffusion Models (AAAI 2026)
 
 
-> **DogFit: Domain-Guided Fine-Tuning for Diffusion Models (AAAI 2026)**,            
+> **DogFit: Domain-Guided Fine-Tuning for Diffusion Models**,            
 > Yara Bahram, Mohammadhadi Shateri, Eric Granger   
 > *AAAI 2026 ([arXiv 2508.05685](https://arxiv.org/abs/2508.05685))*  
 
