@@ -60,10 +60,10 @@ resolve_server_paths() {
         bool)
             conda init
             source ~/.bashrc
-            CODE_PRE_DIR="/PATH_TO_PROJECT/"
-            DATASETS_DIR="/PATH_TO_PROJECT/datasets"
-            RESULTS_PRE_DIR="/PATH_TO_PROJECT/results"
-            ENV_PATH="PATH_TO_ENV/"
+            CODE_PRE_DIR="/path/to/main/directory"
+            DATASETS_DIR="$CODE_PRE_DIR/datasets" # "/path/to/datasets/" # Can keep this the way it is
+            RESULTS_PRE_DIR="$CODE_PRE_DIR/results" # "/path/to/results/directory" # Can keep this the way it is
+            ENV_PATH="path/to/python/environment" # Where you want the environment to be created 
             ;;
         *)
             echo "Unknown server: $SERVER" >&2
