@@ -1,4 +1,4 @@
-# DogFit: Domain-Guided Fine-Tuning for Efficient Transfer Learning of Diffusion Models (AAAI 2026)
+# 💪🐶 DogFit: Domain-Guided Fine-Tuning for Efficient Transfer Learning of Diffusion Models (AAAI 2026)
 
 
 > **DogFit: Domain-Guided Fine-Tuning for Efficient Transfer Learning of Diffusion Models**,            
