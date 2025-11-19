@@ -13,8 +13,6 @@ This repository contains the official implementation of **DogFit**, an efficient
 
 Transfer learning of diffusion models to new domains with limited data is challenging, as naively fine-tuning the model often results in poor generalization. Test-time guidance methods help mitigate this by offering controllable improvements in image fidelity through a trade-off with sample diversity. However, this benefit comes at a high computational cost, typically requiring dual forward passes during sampling.  We propose the Domain-guided Fine-tuning (DogFit) method, an effective guidance mechanism for diffusion transfer learning that maintains controllability without incurring additional computational overhead. DogFit injects a domain-aware guidance offset into the training loss, effectively internalizing the guided behavior during the fine-tuning process. The domain-aware design is motivated by our observation that during fine-tuning, the unconditional source model offers a stronger marginal estimate than the target model. To support efficient controllable fidelity–diversity trade-offs at inference, we encode the guidance strength value as an additional model input through a lightweight conditioning mechanism. We further investigate the optimal placement and timing of the guidance offset during training and propose two simple scheduling strategies, i.e., late-start and cut-off, which improve generation quality and training stability. Experiments on DiT and SiT backbones across six diverse target domains show that DogFit can outperform state-of-the-art guidance methods in transfer learning in terms of FID and FD DINOV2 while requiring up to 2x fewer sampling TFLOPS. 
 
-We demonstrate our method using **SiT-XL/2** and **DiT-XL/2** on the **Food-101** dataset and provide support for evaluating key metrics such as **FID**, **FD_DINOV2**, **Precision**, and **Recall**.
-
 ## Setup
 
 We recommend using `conda` for environment management.  
@@ -30,6 +28,8 @@ ENV_PATH="path/to/python/environment" # Where you want the environment to be cre
 ```
 
 ### One-Line Execution
+
+We demonstrate our method using **SiT-XL/2** and **DiT-XL/2** on the **Food-101** dataset and provide support for evaluating key metrics such as **FID**, **FD_DINOV2**, **Precision**, and **Recall**.
 
 This script automates the entire pipeline on Food-101, applying DogFit on DiT with Control:
 
