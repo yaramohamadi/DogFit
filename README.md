@@ -5,9 +5,9 @@
 > Yara Bahram, Mohammadhadi Shateri, Eric Granger   
 > *AAAI 2026 ([arXiv 2508.05685](https://arxiv.org/abs/2508.05685))*  
 
-<img width="1496" height="768" alt="photo" src="https://github.com/user-attachments/assets/7aa36b7e-5c17-45b5-9083-36e71b1f44eb" />
-
 This repository contains the official implementation of **DogFit**, an efficient domain-guided fine-tuning method for transfer learning of diffusion models.
+
+<img width="1496" height="768" alt="photo" src="https://github.com/user-attachments/assets/7aa36b7e-5c17-45b5-9083-36e71b1f44eb" />
 
 ### 📌 Poster (AAAI 2026)
 👉 **View the poster (PDF):** [DogFit_AAAI26_Poster.pdf](https://github.com/yaramohamadi/DogFit/blob/master/DogFit_AAAI26_Poster.pdf)
