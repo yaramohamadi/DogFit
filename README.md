@@ -1,14 +1,16 @@
 # 💪🐶 DogFit: Domain-Guided Fine-Tuning for Efficient Transfer Learning of Diffusion Models
 
-
 > **DogFit: Domain-Guided Fine-Tuning for Efficient Transfer Learning of Diffusion Models**,            
 > Yara Bahram, Mohammadhadi Shateri, Eric Granger   
 > *AAAI 2026 ([arXiv 2508.05685](https://arxiv.org/abs/2508.05685))*  
 
-This repository contains the official implementation of **DogFit**, an efficient domain-guided fine-tuning method for transfer learning of diffusion models.
+**DogFit** is an efficient domain-guided fine-tuning method for transfer learning of diffusion models.
 
 ### 📌 Poster (AAAI 2026)
-👉 **View the poster (PDF):** [DogFit_AAAI26_Poster.pdf](https://github.com/yaramohamadi/DogFit/blob/master/DogFit_AAAI26_Poster.pdf)
+🪧 [Poster](https://github.com/yaramohamadi/DogFit/blob/master/DogFit_AAAI26_Poster.pdf)
+▶️ [Video](https://www.youtube.com/watch?v=N5TexhceXbY)
+📑 [Slides](https://github.com/yaramohamadi/DogFit/blob/master/DogFit_AAAI26_Slides.pdf)
+
 
 <img width="1496" height="768" alt="photo" src="https://github.com/user-attachments/assets/7aa36b7e-5c17-45b5-9083-36e71b1f44eb" />
 
