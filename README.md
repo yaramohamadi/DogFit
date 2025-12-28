@@ -6,7 +6,7 @@
 
 **DogFit** is an efficient domain-guided fine-tuning method for transfer learning of diffusion models.
 
-### 📌 Poster (AAAI 2026)
+### 📌 AAAI 2026
 🪧 [Poster](https://github.com/yaramohamadi/DogFit/blob/master/DogFit_AAAI26_Poster.pdf)
 ▶️ [Video](https://www.youtube.com/watch?v=N5TexhceXbY)
 📑 [Slides](https://github.com/yaramohamadi/DogFit/blob/master/DogFit_AAAI26_Slides.pdf)
