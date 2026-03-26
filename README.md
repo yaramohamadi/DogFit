@@ -131,10 +131,13 @@ If you have any questions, please contact Yara Bahram at [yara.mohammadi-bahram@
 
 If you find DogFit useful or relevant to your research, please kindly cite:
 ```
-@article{bahram2026dogfit,
-  title={DogFit: Domain-guided Fine-tuning for Efficient Transfer Learning of Diffusion Models},
+@inproceedings{bahram2026dogfit,
+  title={Dogfit: Domain-guided fine-tuning for efficient transfer learning of diffusion models},
   author={Bahram, Yara and Shateri, Mohammadhadi and Granger, Eric},
-  booktitle={AAAI 2026},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={40},
+  number={4},
+  pages={2345--2353},
   year={2026}
 }
 ```
